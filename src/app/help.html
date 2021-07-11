@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Help</title>
+    <link rel="stylesheet" type="text/css" href="./help.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Facet Manual</h1>
+
+        <h2>Data input file</h2>
+
+        <p>Format of data infile:
+            <br>
+            <br> –––––––––––––––––––––––––––––––––
+            <br> Facet Data [A number = 5, optional]
+            <br> Rotation angle (t)
+            <br> Latitude(theta) longitude(phi) x y
+            <br> latitude longitude x y
+            <br> ........
+            <br> ........
+            <br> END
+            <br> –––––––––––––––––––––––––––––––––
+            <br>
+        </p>
+
+        <p>If a number 5 appears in the first line it instructs the program to read data in 5 columns. There should be no empty
+            lines, the data numbers in a line separated by one or more blank spaces. Text appearing after the final END will
+            be ignored and can be used for comments. The latitude and longitudes must be integers, multiples of 10. The allowed
+            interval for the latitude is [-90,90] and for the longitude in [-40,120]. x and y may be real numbers with decimals.
+            The rotation angle (t) is a real number.</p>
+
+        <h2>Using the program</h2>
+
+        <p>Start the program by double clicking the icon. You will be asked to open a data file that must be in the format shown
+            above. You will see two windows, the <strong>Angular Space</strong> window and the
+            <strong>Facet Space</strong> window. The <strong>Angular Space</strong> window shows the data (theta, phi) with an overlay of lines connecting
+            points with the same x (red lines), y (blue lines), and z (green lines) values respectively (in steps of 5). The
+            t rotation is not applied here in order to avoid the distortion induced by this mapping. The <strong>Facet Space</strong> window shows
+            the facet space (x, y), each data point being represented by a small black square. The facet points are connected
+            with a grid of black lines. In some cases I have found that the y-axis is reversed, if this is the case the data
+            can be corrected by using the menu item <strong>Actions / ReverseY</strong>. The <strong>Facet Space</strong> window can be panned by clicking and dragging your mouse.</p>
+
+        <p>Now click in the <strong>Facet Space</strong> window to select it. You can also use the menu item <strong>Window/Facet Space</strong>. You can now
+            change the x, y data by dragging the small black squares. The black grid will adapt to the change but a green grid
+            behind will show the original arrangement of the facets.</p>
+
+        <p>You can undo the last operation in the <strong>Facet Space</strong> window using <strong>Edit/Undo</strong> or Control/Command-Z. If you want to see the effect
+            of the change of the facet data, you choose the menu item <strong>Actions/Update Angular Space</strong>. By clicking in the Facet
+            Space window you can continue to modify the facet data.</p>
+
+        <p>The option <strong>Actions/Preview Data</strong> opens a new window and effectively plots the data, a triangular net, in the Angular Space
+            window on a two-dimensional orthographic representation of a sphere. The t rotation is now applied to the data points.
+            By using the arrow keys on the keyboard you can tip and rotate the sphere to investigate layout of the facets. Hidden
+            parts of the layout are marked red. A blue blob marks the point on the sphere where a line from the eye of the observer
+            to the centre of the sphere cuts the sphere. Around this point the perspective distortion is minimal. </p>
+
+        <p>The image in the window is written to a SVG File using <strong>Actions/Export SVG File</strong>. By first choosing in the
+            Plot Options menu, you can select either of <strong>Average, X, Y, Z</strong> or <strong>Eye parameter</strong> plot. The default option is always
+            the <strong>Average</strong>. When you choose <strong>Export SVG File</strong> there will be a letter added (X, Y, Z, p) to that menu item indicating
+            the chosen option. If any changes have been made in the data, you will be asked if you want to save the changed data
+            in a new data file. The SVG file can be sent to a printer or can be opened and handled by applications
+            like Illustrator or Photoshop.</p>
+
+        <p>You can also save the modified data at any time by choosing <strong>File/Save</strong>.</p>
+
+        <p>Values displayed on X, Y and Z plots reveal the angular spacing between individual x, y, and z facet rows, respectively.
+            Unfortunately, in the current program, the z (green) rows are incorrectly plotted in the Angular Space – they should
+            be roughly perpendicular to the direction they are currently shown. This means that the Z values shown on the plots
+            are incorrect. It turns out, however, that a value of half the current Z value (at any given position on the Z-globe)
+            is the correct value for (correct) z-rows running in the roughly perpendicular direction. Thus the correct x, y and
+            z spacings are X, Y and 0.5Z.</p>
+
+        <h2>Inserting new data points</h2>
+
+        <ol>
+            <li>Choose <strong>Insert Point</strong> at the bottom of the <strong>Action</strong> menu. The Facet window will go to the front (unless it isn't already
+                there) and the cursor will change to a hand.</li>
+
+            <li>
+                <p>Suppose you want to extend a chain of existing points with an extra point to the right. You click the next to
+                    last point in the chain (it will be marked by a circle) then the last point in the chain (it will also be
+                    marked) and then finally click where you want the new facet point to be. All the windows will now be updated
+                    taking the new point into account. The procedure is analogous if you want to extend a chain to the left or
+                    up- or downwards. The points introduced in this way can be moved as regular points but will be marked by
+                    an unfilled square. It will copy the D (diameter) value (if any) from the previous last point in the chain.</p>
+
+                <p>If you try to extend the chain on top of an already existing point there will be a beep and the Insert Point
+                    operation will be cancelled. The same thing will happen if you try to insert points outside the present angular
+                    limits (-40 to 120 degrees in phi and -90 to 90 degrees in theta).</p>
+
+                <p>Inserted points will not be saved in the original data file.</p>
+            </li>
+        </ol>
+
+        <h2>The Menus</h2>
+
+        <h3>File</h3>
+        <p>Here you can
+            <strong>Open</strong>,
+            <strong>Save</strong> (if opened) a Facet Data file and
+            <strong>Quit</strong> the application. If any changes have been made in the original data you will be asked to save the changed
+            data in a new file.</p>
+
+        <h3>Edit</h3>
+        <p>The item <strong>Undo</strong> is implemented. It undoes the last change made in the Facet Space window.</p>
+
+        <h3>Actions</h3>
+        <ul>
+            <li>
+                <strong>ReverseY</strong> inverts the sign of all y co-ordinates.</li>
+            <li>
+                <strong>Preview Data</strong> can be used to check that the output SVG file data looks nice.</li>
+            <li>
+                <strong>Export SVG</strong> composes a SVG file of the output data in the form decided by the setting in the Plot
+                Options menu. The SVG file is always saved in the Facet application folder.</li>
+        </ul>
+        <h3>Plot Options</h3>
+        <ul>
+            <li>
+                <strong>Average plot</strong>
+            </li>
+            <li>
+                <strong>X Plot</strong>
+            </li>
+            <li>
+                <strong>Y Plot</strong>
+            </li>
+            <li>
+                <strong>Z Plot</strong>
+            </li>
+            <li>
+                <strong>Eye Parameter</strong>
+            </li>
+        </ul>
+    </div>
+</body>
+
+</html>

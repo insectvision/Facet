@@ -1,4 +1,4 @@
-# Facet V4.0.1
+# Facet V4.0.2
 Software for reconstructing maps of visual acuity from insect eyes
 
 The binary is downloadable under 'Releases'.
