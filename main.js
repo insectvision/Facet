@@ -1,7 +1,8 @@
 const electron = require('electron');
 const { app, BrowserWindow, Menu, dialog, ipcMain, MessageChannelMain } = require('electron');
 const fs = require('fs');
-require('@electron/remote/main').initialize()
+const remote = require('@electron/remote/main');
+remote.initialize();
 
 const FileManager = require('./src/app/file-manager');
 const DataModel = require('./src/app/data-model');
@@ -410,7 +411,6 @@ function createMenu() {
 
 function openFile() {
 	dialog.showOpenDialog({ properties: ['openFile', 'openDirectory', 'multiSelections'] }).then(value => {
-		console.log('value', value);
 		if (!value.canceled) {
 			const fileNames = value.filePaths;
 			if (angularWindow) {
@@ -442,27 +442,30 @@ function openFile() {
 	
 					// read data from a file
 					const fileReadResult = fileManager.readData(data);
-					console.log('fileReadResult.cols', fileReadResult.cols);
+
 					global.cols = parseInt(fileReadResult.cols);
-					global.t = parseInt(fileReadResult.t);
+					global.t = parseFloat(fileReadResult.t);
 	
 					// format file data into data modela
 					global.data = facetData.create(fileReadResult.data, global.cols);
 					global.saveData = JSON.parse(JSON.stringify(global.data));
-	
-					if(global.data && global.t && global.cols){
+
+					if(global.data && typeof global.t === 'number' && typeof global.cols === 'number'){
 						// set menu options
 						setPlotMenuOptions(global.cols);
+
 						// open windows
 						openAngularWindow();
 						openFacetWindow();
+
 						// set status as clean
 						setDirty(false);
 						resetUndoRedo();
+						
 						// enable saveAs
 						menu.items[1].submenu.items[2].enabled = true;
-					}else {
-						dialog.showErrorBox('An error ocurred opening the file.');
+					} else {
+						dialog.showErrorBox('An error ocurred opening the file.', `data: ${typeof global.data === 'object'}, t: ${typeof global.t === 'number'}, cols: ${typeof global.cols === 'number'}`);
 					}
 				}
 			});
@@ -518,6 +521,7 @@ function openAngularWindow() {
 			enableRemoteModule: true,
 		}
 	});
+	remote.enable(angularWindow.webContents)
 
 	angularWindow.loadFile('./src/app/angular-view/angular-view.html').then(() => {
 		const message = {
@@ -526,6 +530,7 @@ function openAngularWindow() {
 		};
 		// angularWindow.webContents.send('setup', message);
 		angularWindow.webContents.send('update', message);
+		
 	}).catch(err => dialog.showErrorBox('Problem loading angular space.', err.message))
 
 	// Open the DevTools.
@@ -555,6 +560,8 @@ function openFacetWindow() {
 			enableRemoteModule: true
 		}
 	});
+
+	remote.enable(facetWindow.webContents);
 
 	if (debug) facetWindow.webContents.openDevTools();
 
@@ -628,6 +635,8 @@ function createOrthoWindow() {
 		}
 	});
 
+	remote.enable(orthoWindow.webContents);
+
 	if (debug) orthoWindow.webContents.openDevTools();
 
 	orthoWindow.loadFile('./src/app/ortho-view/ortho-view.html');
@@ -660,18 +669,18 @@ async function saveAs() {
 	})
 	if (result.canceled) {
 		// cancelled
-		console.log('file not saved');
+		console.warn('file not saved');
 	} else {
 		writeFileToDisk(result.filePath);
 	}
 }
 
 function writeFileToDisk(fileName) {
-	console.log('writeFileToDisk - fileName', fileName);
+	// console.log('writeFileToDisk - fileName', fileName);
 	const content = fileManager.saveFile(global.data, global.cols, global.t);
 	// fileName is a string that contains the path and filename created in the save file dialog.
 	fs.writeFile(fileName, content, (err) => {
-		console.log('err', err)
+		console.error('err', err)
 		if (err) {
 			dialog.showErrorBox('Save Error', 'An error ocurred creating the file ' + err.message);
 		} else {

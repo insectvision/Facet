@@ -22,6 +22,7 @@ class FileManager {
         cols = 4;
         // disable some menu items
       }
+
       const t = lines.shift();
 
       // translate data into arrays and numbers

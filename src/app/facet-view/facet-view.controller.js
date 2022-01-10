@@ -1,5 +1,6 @@
 'use strict';
-const { ipcRenderer, remote, shell } = require('electron');
+const { ipcRenderer, shell } = require('electron');
+const remote = require('@electron/remote');
 import {FacetGrid} from './facet-grid.js';
 const paper = require('paper');
 
