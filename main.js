@@ -450,7 +450,7 @@ function openFile() {
 					global.data = facetData.create(fileReadResult.data, global.cols);
 					global.saveData = JSON.parse(JSON.stringify(global.data));
 
-					if(global.data && typeof global.t === 'number' && typeof global.cols === 'number'){
+					if (global.data && typeof global.t === 'number' &&  Number.isInteger(global.cols)){
 						// set menu options
 						setPlotMenuOptions(global.cols);
 
@@ -465,7 +465,7 @@ function openFile() {
 						// enable saveAs
 						menu.items[1].submenu.items[2].enabled = true;
 					} else {
-						dialog.showErrorBox('An error ocurred opening the file.', `data: ${typeof global.data === 'object'}, t: ${typeof global.t === 'number'}, cols: ${typeof global.cols === 'number'}`);
+						dialog.showErrorBox('An error ocurred opening the file.', `data: ${typeof global.data === 'object'}, t: ${typeof global.t === 'number'}, cols: ${Number.isInteger(global.cols)}`);
 					}
 				}
 			});
