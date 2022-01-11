@@ -71,14 +71,24 @@
           "name": "@electron-forge/maker-dmg",
           "config": {
             "additionalDMGOptions": {
-              "background-color": "rgb(0,0,0)"
+              "background-color": "#000000",
+              "window": {
+                "size": {
+                  "height": 420,
+                  "width": 516
+                }
+              }
             },
             "format": "ULFO",
             "icon": "build/icon.png",
             "iconSize": 128,
-            "name": "Facet-4.0.3",
+            "name": "Facet",
             "overwrite": true,
-            "background": "build/background.tif"
+            "background": "build/background.png",
+            "contents": [
+              { "x": 400, "y": 240, "type": "link", "path": "/Applications" },
+              { "x": 120, "y": 240, "type": "file", "path": "/Users/ktedore/Development/GitHub/Facet/out/Facet-darwin-x64/Facet.app" }
+            ]
           }
         }
       ]
